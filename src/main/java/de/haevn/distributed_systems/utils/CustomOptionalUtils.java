@@ -21,7 +21,7 @@ public class CustomOptionalUtils {
         if(empties != 0)throw new ArgumentMismatchException();
     }
 
-    public static void containsNullValue(String ... objects) throws ArgumentMismatchException {
+    public static void containsNullValue(Object ... objects) throws ArgumentMismatchException {
         long empties = Arrays.stream(objects).filter(Objects::isNull).count();
         logger.info("Checked {} object for null result: {} are null", objects.length, empties);
         if(empties != 0)throw new ArgumentMismatchException();
