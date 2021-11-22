@@ -1,16 +1,12 @@
 package de.haevn.distributed_systems.v2.service;
 
-import de.haevn.distributed_systems.v2.exceptions.ExistenceException;
-import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.model.User;
 import de.haevn.distributed_systems.v2.repository.UserRepository;
-import de.haevn.distributed_systems.v2.utils.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class UserService implements IUserService {
@@ -75,11 +71,6 @@ public class UserService implements IUserService {
     @Override
     public Optional<User> findByEmail(String mail) {
         return repository.findByEmail(mail);
-    }
-
-    @Override
-    public User save(String firstName, String lastName, String email, String address, String password) throws ExistenceException, ArgumentMismatchException {
-        return null;
     }
 
     private Optional<User> updateInternal(User input){
