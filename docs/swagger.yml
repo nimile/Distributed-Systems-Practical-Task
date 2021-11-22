@@ -1,0 +1,236 @@
+openapi: '3.0.2'
+info:
+  title: Rest API 1 Implementation 
+  version: '1.0'
+servers:
+  - url: 127.0.0.1:8080
+paths:
+  /users:
+    post:
+      tags:
+        - "User"
+      summary: Creates a new user object
+      description: Creates a new user. If successful the newly created object is returned for verification.
+      parameters:
+      - in: query
+        name: firstname
+        schema:
+          type: string
+          example: John
+      - in: query
+        name: lastname
+        schema:
+          type: string
+          example: Doe
+      - in: query
+        name: email
+        schema:
+          type: string
+          example: john.doe@provider.domain
+      - in: query
+        name: address
+        schema:
+          type: string
+          example: Zero Street 1, Old Town
+      - in: query
+        name: password
+        schema:
+          type: string
+          example: ThisIsNotASecurePassword
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/User'
+               
+        '422':
+          description: One ore more arguments are missing
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Exception'
+        
+        '400':
+          description: A user with the given email address already exists
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Exception'
+
+    get:
+      tags:
+        - "User"
+      summary: Request a list of all users
+      description: This method returns a list of all existing users. If no user exists an empty list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/UserList'
+               
+    put:
+      tags:
+        - "User"
+      summary: Overrides all given user
+      description: Takes a list of user object. If an object exists it content will be updated. After a successful operation the total amount of updates is returned
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                example:
+                  "updates": 1
+        '422':
+          description: An empty body was provided
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Exception'
+
+    delete:
+      tags:
+        - "User"
+      description: Deletes all user objects
+      responses:
+        '200':
+          description: OK
+
+  /users/{id}:
+    post:
+      tags:
+        - "User/{id}"
+      summary: Forbidden operation
+      responses:
+        '403':
+          description: Operation is illegal
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Exception'
+        
+    get:
+      tags:
+        - "User/{id}"
+      summary: Request a specific user
+      description: If the user exists the corresponding object will be returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/User'
+              
+ 
+        '404':
+          description: Requested user does not exist
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Exception'
+  
+
+
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          description: Automatic generated ID for the object
+          format: int64
+          type: integer
+        firstname:
+          type: string
+          example: John
+        lastname: 
+          type: string
+          example: Doe
+        email: 
+          type: string
+          example: john.doe@provider.domain
+        address: 
+          type: string
+          example: Zero Av. Generic Town
+        password: 
+          type: string
+          example: ThisIsAnInsecurePassword
+    Product:
+      type: object
+      properties:
+        id:
+          description: Automatic generated ID for the object
+          type: integer
+          format: int64
+        brand:
+          type: string
+        description: 
+          type: string
+        newPrice: 
+          type: number
+        oldPrice: 
+          type: number
+    Review:
+      type: object
+      properties:
+        id:
+          description: Automatic generated ID for the object
+          type: integer
+          format: int64
+        publisher:
+          type: string
+        text: 
+          type: string
+        starRating: 
+          type: number
+  
+    UserList:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/User'
+    ProductList:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Product'
+    ReviewList:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Review'
+
+    Exception:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: 2021-11-21T23:22:27.744+00:00
+        status:
+          type: integer
+          format: int64
+          description: HTTP status code
+        error: 
+          type: string
+          description: Name of the status code
+          example: Name of the http status code
+        trace: 
+          type: string
+          description: Stacktrace of the exception
+          example: ...
+        message:
+          type: string
+          description: Message of the exception
+          example: Message of the exception
+        path:
+          type: string
+          description: Endpoint path where the exception occurred
+          example: Endpoint path where the exception occurred
