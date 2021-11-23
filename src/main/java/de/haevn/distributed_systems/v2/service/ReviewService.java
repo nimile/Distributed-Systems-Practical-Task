@@ -1,7 +1,7 @@
 package de.haevn.distributed_systems.v2.service;
 
-import de.haevn.distributed_systems.v2.model.Product;
-import de.haevn.distributed_systems.v2.repository.ProductRepository;
+import de.haevn.distributed_systems.v2.model.Review;
+import de.haevn.distributed_systems.v2.repository.ReviewRepository;
 import de.haevn.distributed_systems.v2.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,39 +10,39 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService implements IProductService{
+public class ReviewService implements IReviewService{
 
     @Autowired
-    private ProductRepository repository;
+    private ReviewRepository repository;
 
     @Override
-    public Optional<Product> findById(Long id) {
+    public Optional<Review> findById(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public List<Product> findAll() {
+    public List<Review> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public boolean save(Product obj) {
+    public boolean save(Review obj) {
         repository.save(obj);
         return true;
     }
 
     @Override
-    public void save(List<Product> objs) {
+    public void save(List<Review> objs) {
         repository.saveAll(objs);
     }
 
     @Override
-    public Optional<Product> update(Product obj) {
+    public Optional<Review> update(Review obj) {
         return updateInternal(obj);
     }
 
     @Override
-    public Long update(List<Product> objs) {
+    public Long update(List<Review> objs){
         long counter;
         counter = objs.stream()
                 .filter(obj -> obj.getId() != null)
@@ -58,7 +58,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public void delete(Product obj) {
+    public void delete(Review obj) {
         repository.delete(obj);
     }
 
@@ -68,28 +68,24 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Optional<Product> updateInternal(Product input) {
+    public Optional<Review> updateInternal(Review input) {
         var repositoryResult = repository.findById(input.getId());
         if(repositoryResult.isEmpty()){
             return Optional.empty();
         }
 
-        var name = input.getName();
-        var brand = input.getBrand();
-        var newPrice = input.getNewPrice();
-        var oldPrice = repositoryResult.get().getNewPrice();
-
-        if(AppUtils.isStringNeitherNullNorEmpty(name)){
-            repositoryResult.get().setName(name);
+        var publisher = input.getPublisher();
+        var rating = input.getStarRating();
+        var text = input.getText();
+        if(AppUtils.isStringNeitherNullNorEmpty(text)){
+            repositoryResult.get().setText(text);
         }
-        if(AppUtils.isStringNeitherNullNorEmpty(brand)){
-            repositoryResult.get().setBrand(brand);
+        if(AppUtils.isStringNeitherNullNorEmpty(publisher)){
+            repositoryResult.get().setPublisher(publisher);
         }
-        if(null != newPrice){
-            repositoryResult.get().setNewPrice(newPrice);
-            repositoryResult.get().setOldPrice(oldPrice);
+        if(null != rating){
+            repositoryResult.get().setStarRating(rating);
         }
-
         repository.save(repositoryResult.get());
         return repositoryResult;
     }

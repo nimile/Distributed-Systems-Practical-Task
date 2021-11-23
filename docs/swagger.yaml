@@ -94,7 +94,7 @@ paths:
       tags:
         - "Users/{id}"
       summary: Request information about a user
-      description: "This method returns a details about an users.<br>
+      description: "This method returns a details about an user.<br>
         <ul>Following codes can be yield
         <li><b>OK:</b> The user was successful returned</li>
         <li><b>NOT FOUND:</b> There is no user associated with given id</li>
@@ -111,13 +111,13 @@ paths:
           description: OK
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/User'
         '404':
           description: NOT_FOUND
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Exception'
 
     post:
@@ -136,16 +136,16 @@ paths:
           description: Forbidden
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Exception'
-  
+
     put:
       tags:
         - "Users/{id}"
       summary: Updates information about a user
       description: "This method updates the user associated with given id<br>
         <ul>Following codes can be yield
-        <li><b>OK:</b> The user was successful deleted</li>
+        <li><b>OK:</b> The user was successful updated</li>
         <li><b>CONFLICT: </b>The given id does not match the id specified by the body</li>
        <li><b>UNPROCESSABLE_ENTITY: </b> The body is missing</li>
         </ul>"
@@ -161,19 +161,19 @@ paths:
           description: OK
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/postUser'
         '409':
           description: CONFLICT
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Exception'
         '422':
           description: UNPROCESSABLE_ENTITY
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Exception'
 
     delete:
@@ -260,6 +260,279 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
+  /Products/{id}:
+    get:
+      tags:
+        - "Products/{id}"
+      summary: Request information about a product
+      description: "This method returns a details about an product.<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The product was successful returned</li>
+        <li><b>NOT FOUND:</b> There is no product associated with given id</li>
+        </ul>"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired product
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: NOT_FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+
+    post:
+      tags:
+        - "Products/{id}"
+      summary: Not allowed
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired product
+      responses:
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+
+    put:
+      tags:
+        - "Products/{id}"
+      summary: Updates information about a Product
+      description: "This method updates the product associated with given id<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The product was successful updated</li>
+        <li><b>CONFLICT: </b>The given id does not match the id specified by the body</li>
+       <li><b>UNPROCESSABLE_ENTITY: </b> The body is missing</li>
+        </ul>"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired product
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postProduct'
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+
+    delete:
+      tags:
+        - "Products/{id}"
+      summary: Deletes the product specified by id
+      responses:
+        '200':
+          description: OK
+
+
+
+  /reviews:
+    get:
+      tags:
+        - "Reviews"
+      summary: Request a list of all reviews
+      description: This method returns a list of all existing reviews.<br>
+        If no review exists an empty list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewList'
+
+    post:
+      tags:
+        - "Reviews"
+      summary: Create a new reviews
+      description: "Requires a json object as request body.<br>
+        <ul>
+          Following codes can be yield
+          <li><b>OK:</b> Operation succeed</li>
+          <li><b>UNPROCESSABLE ENTITY</b>: The requestbody is missing</li>
+          <li><b>INTERNAL SERVER ERROR</b>: This status should never thrown</li>
+        </ul>"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postReview'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+
+    put:
+      tags:
+        - "Reviews"
+      summary: Updates a list of reviews.
+      description: This method takes a list of review objects and updates them if they exists.<br>
+        It will return a json object containing how many reviews are updated
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
+
+    delete:
+      tags:
+        - "Reviews"
+      summary: Deletes all existing reviews
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
+  /Reviews/{id}:
+      get:
+        tags:
+          - "Reviews/{id}"
+        summary: Request information about a review
+        description: "This method returns a details about an reviews.<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The reviews was successful returned</li>
+        <li><b>NOT FOUND:</b> There is no review associated with given id</li>
+        </ul>"
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: integer
+            required: true
+            description: ID of the desired review
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Review'
+          '404':
+            description: NOT_FOUND
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Exception'
+
+      post:
+        tags:
+          - "Reviews/{id}"
+        summary: Not allowed
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: integer
+            required: true
+            description: ID of the desired review
+        responses:
+          '403':
+            description: Forbidden
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Exception'
+
+      put:
+        tags:
+          - "Reviews/{id}"
+        summary: Updates information about a review
+        description: "This method updates the review associated with given id<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The user was successful updated</li>
+        <li><b>CONFLICT: </b>The given id does not match the id specified by the body</li>
+       <li><b>UNPROCESSABLE_ENTITY: </b> The body is missing</li>
+        </ul>"
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: integer
+            required: true
+            description: ID of the desired review
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/postReview'
+          '409':
+            description: CONFLICT
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Exception'
+          '422':
+            description: UNPROCESSABLE_ENTITY
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Exception'
+
+      delete:
+        tags:
+          - "Reviews/{id}"
+        summary: Deletes the review specified by id
+        responses:
+          '200':
+            description: OK
+
+
+
+
+
+
 components:
   schemas:
     User:
@@ -367,6 +640,18 @@ components:
         newPrice:
           type: number
           example: 79.99
+    postReview:
+      type: object
+      properties:
+        publisher:
+          type: string
+          example: Publisher name
+        text:
+          type: string
+          example: Text of the review
+        newPrice:
+          type: starRating
+          example: 5
 
     MessageContainer:
       type: object
