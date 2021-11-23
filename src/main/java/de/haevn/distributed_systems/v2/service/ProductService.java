@@ -2,6 +2,7 @@ package de.haevn.distributed_systems.v2.service;
 
 import de.haevn.distributed_systems.v2.model.Product;
 import de.haevn.distributed_systems.v2.repository.ProductRepository;
+import de.haevn.distributed_systems.v2.service.interfaces.IProductService;
 import de.haevn.distributed_systems.v2.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,37 +11,57 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService implements IProductService{
-
+public class ProductService implements IProductService {
     @Autowired
     private ProductRepository repository;
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Product> findById(Long id) {
         return repository.findById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> findAll() {
         return repository.findAll();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean save(Product obj) {
         repository.save(obj);
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void save(List<Product> objs) {
         repository.saveAll(objs);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Product> update(Product obj) {
         return updateInternal(obj);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long update(List<Product> objs) {
         long counter;
@@ -52,21 +73,27 @@ public class ProductService implements IProductService{
         return counter;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
     }
 
-    @Override
-    public void delete(Product obj) {
-        repository.delete(obj);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete() {
         repository.deleteAll();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Product> updateInternal(Product input) {
         var repositoryResult = repository.findById(input.getId());

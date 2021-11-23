@@ -1,9 +1,8 @@
 package de.haevn.distributed_systems.v2.service;
 
-import de.haevn.distributed_systems.v2.model.Review;
-import de.haevn.distributed_systems.v2.repository.ReviewRepository;
-import de.haevn.distributed_systems.v2.service.interfaces.IReviewService;
-import de.haevn.distributed_systems.v2.utils.AppUtils;
+import de.haevn.distributed_systems.v2.model.Order;
+import de.haevn.distributed_systems.v2.repository.OrderRepository;
+import de.haevn.distributed_systems.v2.service.interfaces.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ReviewService implements IReviewService {
+public class OrderService implements IOrderService {
     @Autowired
-    private ReviewRepository repository;
-
+    private OrderRepository repository;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<Review> findById(Long id) {
+    public Optional<Order> findById(Long id) {
         return repository.findById(id);
     }
 
@@ -28,7 +26,7 @@ public class ReviewService implements IReviewService {
      * {@inheritDoc}
      */
     @Override
-    public List<Review> findAll() {
+    public List<Order> findAll() {
         return repository.findAll();
     }
 
@@ -37,7 +35,7 @@ public class ReviewService implements IReviewService {
      * {@inheritDoc}
      */
     @Override
-    public boolean save(Review obj) {
+    public boolean save(Order obj) {
         repository.save(obj);
         return true;
     }
@@ -46,16 +44,15 @@ public class ReviewService implements IReviewService {
      * {@inheritDoc}
      */
     @Override
-    public void save(List<Review> objs) {
+    public void save(List<Order> objs) {
         repository.saveAll(objs);
     }
-
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<Review> update(Review obj) {
+    public Optional<Order> update(Order obj) {
         return updateInternal(obj);
     }
 
@@ -63,7 +60,7 @@ public class ReviewService implements IReviewService {
      * {@inheritDoc}
      */
     @Override
-    public Long update(List<Review> objs){
+    public Long update(List<Order> objs) {
         long counter;
         counter = objs.stream()
                 .filter(obj -> obj.getId() != null)
@@ -72,7 +69,6 @@ public class ReviewService implements IReviewService {
                 .count();
         return counter;
     }
-
 
     /**
      * {@inheritDoc}
@@ -90,30 +86,11 @@ public class ReviewService implements IReviewService {
         repository.deleteAll();
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<Review> updateInternal(Review input) {
-        var repositoryResult = repository.findById(input.getId());
-        if(repositoryResult.isEmpty()){
-            return Optional.empty();
-        }
-
-        var publisher = input.getPublisher();
-        var rating = input.getStarRating();
-        var text = input.getText();
-        if(AppUtils.isStringNeitherNullNorEmpty(text)){
-            repositoryResult.get().setText(text);
-        }
-        if(AppUtils.isStringNeitherNullNorEmpty(publisher)){
-            repositoryResult.get().setPublisher(publisher);
-        }
-        if(null != rating){
-            repositoryResult.get().setStarRating(rating);
-        }
-        repository.save(repositoryResult.get());
-        return repositoryResult;
+    public Optional<Order> updateInternal(Order input) {
+        return Optional.empty();
     }
 }

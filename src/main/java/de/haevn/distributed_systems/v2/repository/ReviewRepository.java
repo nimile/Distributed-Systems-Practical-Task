@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface ReviewRepository extends MongoRepository<Review, Long> {
     Optional<Review> findById(Long id);
-    List<Review> findByPublisher(String publisher);
     List<Review> findAll();
 }

@@ -19,7 +19,6 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/UserList'
-
     post:
       tags:
         - "Users"
@@ -63,7 +62,6 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Exception'
-
     put:
       tags:
         - "Users"
@@ -77,7 +75,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
- 
     delete:
       tags:
         - "Users"
@@ -89,6 +86,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
+
   /users/{id}:
     get:
       tags:
@@ -119,7 +117,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     post:
       tags:
         - "Users/{id}"
@@ -138,7 +135,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     put:
       tags:
         - "Users/{id}"
@@ -175,7 +171,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     delete:
       tags:
         - "Users/{id}"
@@ -183,6 +178,7 @@ paths:
       responses:
         '200':
           description: OK
+
 
   /products:
     get:
@@ -198,7 +194,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductList'
-
     post:
       tags:
         - "Products"
@@ -234,7 +229,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     put:
       tags:
         - "Products"
@@ -248,7 +242,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
-
     delete:
       tags:
         - "Products"
@@ -260,7 +253,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
-  /Products/{id}:
+
+  /products/{id}:
     get:
       tags:
         - "Products/{id}"
@@ -290,7 +284,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     post:
       tags:
         - "Products/{id}"
@@ -309,7 +302,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     put:
       tags:
         - "Products/{id}"
@@ -346,7 +338,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     delete:
       tags:
         - "Products/{id}"
@@ -354,7 +345,6 @@ paths:
       responses:
         '200':
           description: OK
-
 
 
   /reviews:
@@ -371,7 +361,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ReviewList'
-
     post:
       tags:
         - "Reviews"
@@ -407,7 +396,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exception'
-
     put:
       tags:
         - "Reviews"
@@ -421,7 +409,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
-
     delete:
       tags:
         - "Reviews"
@@ -433,102 +420,266 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
-  /Reviews/{id}:
-      get:
-        tags:
-          - "Reviews/{id}"
-        summary: Request information about a review
-        description: "This method returns a details about an reviews.<br>
+
+  /reviews/{id}:
+    get:
+      tags:
+        - "Reviews/{id}"
+      summary: Request information about a review
+      description: "This method returns a details about an reviews.<br>
         <ul>Following codes can be yield
         <li><b>OK:</b> The reviews was successful returned</li>
         <li><b>NOT FOUND:</b> There is no review associated with given id</li>
         </ul>"
-        parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
-            description: ID of the desired review
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Review'
-          '404':
-            description: NOT_FOUND
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Exception'
-
-      post:
-        tags:
-          - "Reviews/{id}"
-        summary: Not allowed
-        parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
-            description: ID of the desired review
-        responses:
-          '403':
-            description: Forbidden
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Exception'
-
-      put:
-        tags:
-          - "Reviews/{id}"
-        summary: Updates information about a review
-        description: "This method updates the review associated with given id<br>
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired review
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '404':
+          description: NOT_FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    post:
+      tags:
+        - "Reviews/{id}"
+      summary: Not allowed
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired review
+      responses:
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    put:
+      tags:
+        - "Reviews/{id}"
+      summary: Updates information about a review
+      description: "This method updates the review associated with given id<br>
         <ul>Following codes can be yield
         <li><b>OK:</b> The user was successful updated</li>
         <li><b>CONFLICT: </b>The given id does not match the id specified by the body</li>
        <li><b>UNPROCESSABLE_ENTITY: </b> The body is missing</li>
         </ul>"
-        parameters:
-          - in: path
-            name: id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired review
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postReview'
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    delete:
+      tags:
+        - "Reviews/{id}"
+      summary: Deletes the review specified by id
+      responses:
+        '200':
+          description: OK
+
+
+  /questions:
+    get:
+      tags:
+        - "Questions"
+      summary: Request a list of all questions
+      description: This method returns a list of all existing questions.<br>
+        If no review exists an empty list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionList'
+    post:
+      tags:
+        - "Questions"
+      summary: Create a new question
+      description: "Requires a json object as request body.<br>
+        <ul>
+          Following codes can be yield
+          <li><b>OK:</b> Operation succeed</li>
+          <li><b>UNPROCESSABLE ENTITY</b>: The requestbody is missing</li>
+          <li><b>INTERNAL SERVER ERROR</b>: This status should never thrown</li>
+        </ul>"
+      requestBody:
+        content:
+          application/json:
             schema:
-              type: integer
-            required: true
-            description: ID of the desired review
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/postReview'
-          '409':
-            description: CONFLICT
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Exception'
-          '422':
-            description: UNPROCESSABLE_ENTITY
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Exception'
+              $ref: '#/components/schemas/postQuestion'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    put:
+      tags:
+        - "Questions"
+      summary: Updates a list of questions.
+      description: This method takes a list of question objects and updates them if they exists.<br>
+        It will return a json object containing how many reviews are updated
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
+    delete:
+      tags:
+        - "Questions"
+      summary: Deletes all existing questions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
 
-      delete:
-        tags:
-          - "Reviews/{id}"
-        summary: Deletes the review specified by id
-        responses:
-          '200':
-            description: OK
 
-
+  /questions/{id}:
+    get:
+      tags:
+        - "Questions/{id}"
+      summary: Request information about a question
+      description: "This method returns a details about an questions.<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The questions was successful returned</li>
+        <li><b>NOT FOUND:</b> There is no review associated with given id</li>
+        </ul>"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired question
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '404':
+          description: NOT_FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    post:
+      tags:
+        - "Questions/{id}"
+      summary: Not allowed
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired question
+      responses:
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    put:
+      tags:
+        - "Questions/{id}"
+      summary: Updates information about a questions
+      description: "This method updates the questions associated with given id<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The user was successful updated</li>
+        <li><b>CONFLICT: </b>The given id does not match the id specified by the body</li>
+       <li><b>UNPROCESSABLE_ENTITY: </b> The body is missing</li>
+        </ul>"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired review
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postQuestion'
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    delete:
+      tags:
+        - "Questions/{id}"
+      summary: Deletes the question specified by id
+      responses:
+        '200':
+          description: OK
 
 
 
@@ -544,19 +695,19 @@ components:
           type: integer
         firstname:
           type: string
-          example: John
+          example: Max
         lastname: 
           type: string
-          example: Doe
+          example: Mustermann
         email: 
           type: string
-          example: john.doe@provider.domain
+          example: max.mustermann@gmail.com
         address: 
           type: string
-          example: Zero Av. Generic Town
+          example: Duisburger Straße 1
         password: 
           type: string
-          example: ThisIsAnInsecurePassword
+          example: 1234
     Product:
       type: object
       properties:
@@ -566,16 +717,42 @@ components:
           format: int64
         brand:
           type: string
-          example: Generic brand
+          example: BambooKeys
         name:
           type: string
-          example: Generic product name
+          example: Tastatur
         newPrice: 
           type: number
-          example: 79.99
+          example: 89.99
         oldPrice: 
           type: number
-          example: 89.99
+          example: 119.99
+    Question:
+      type: object
+      properties:
+        id:
+          description: Automatic generated ID for the object
+          type: integer
+          format: int64
+        firstname:
+          type: string
+          example: Max
+        lastname:
+          type: string
+          example: Mustermann
+        subject:
+          type: string
+          example: Defektes Produkt
+        category:
+          type: string
+          example: Retoure
+        customerId:
+          type: integer
+          format: int64
+          example: 1
+        description:
+          type: string
+          example: Mein Produkt is defekt!
     Review:
       type: object
       properties:
@@ -585,10 +762,32 @@ components:
           format: int64
         publisher:
           type: string
-        text: 
-          type: string
-        starRating: 
+          example: Max Mustermann
+        starRating:
           type: number
+          example: 5
+        text:
+          type: string
+          example: Example Review Text
+    Order:
+      type: object
+      properties:
+        id:
+          description: Automatic generated ID for the object
+          type: integer
+          format: int64
+        date:
+          description: UTC Date representation of the current date
+          type: string
+          example: 01-01-2021
+        payment:
+          description: Payment method
+          type: string
+          example: Paypal
+        total:
+          description: Total amount of payment
+          type: number
+          example: 100.99
   
     UserList:
       type: array
@@ -605,7 +804,16 @@ components:
       items:
         type: object
         $ref: '#/components/schemas/Review'
-
+    QuestionList:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Question'
+    OrderList:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Order'
 
     postUser:
       type: object
@@ -650,8 +858,49 @@ components:
           type: string
           example: Text of the review
         newPrice:
-          type: starRating
+          type: integer
+          format: int64
           example: 5
+    postQuestion:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: Max
+        lastname:
+          type: string
+          example: Mustermann
+        subject:
+          type: string
+          example: Defektes Produkt
+        category:
+          type: string
+          example: Retoure
+        customerId:
+          type: integer
+          format: int64
+          example: 1
+        description:
+          type: string
+          example: Mein Produkt is defekt!
+    postOrder:
+      type: object
+      properties:
+        date:
+          description: UTC Date representation of the current date
+          type: string
+          example: 01-01-2021
+          required: true
+        payment:
+          description: Payment method
+          type: string
+          example: Paypal
+          required: true
+        total:
+          description: Total amount of payment
+          type: number
+          example: 100.99
+          required: true
 
     MessageContainer:
       type: object
