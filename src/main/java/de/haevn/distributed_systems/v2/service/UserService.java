@@ -2,6 +2,7 @@ package de.haevn.distributed_systems.v2.service;
 
 import de.haevn.distributed_systems.v2.model.User;
 import de.haevn.distributed_systems.v2.repository.UserRepository;
+import de.haevn.distributed_systems.v2.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +74,10 @@ public class UserService implements IUserService {
         return repository.findByEmail(mail);
     }
 
-    private Optional<User> updateInternal(User input){
-        var repositoryUser = repository.findById(input.getId());
-        if(repositoryUser.isEmpty()){
+    @Override
+    public Optional<User> updateInternal(User input){
+        var repositoryResult = repository.findById(input.getId());
+        if(repositoryResult.isEmpty()){
             return Optional.empty();
         }
 
@@ -84,19 +86,19 @@ public class UserService implements IUserService {
         var address = input.getAddress();
         var password = input.getPassword();
 
-        if(null != firstname && !firstname.isBlank()){
-            repositoryUser.get().setFirstname(firstname);
+        if(AppUtils.isStringNeitherNullNorEmpty(firstname)){
+            repositoryResult.get().setFirstname(firstname);
         }
-        if(null != lastname && !lastname.isBlank()){
-            repositoryUser.get().setLastname(lastname);
+        if(AppUtils.isStringNeitherNullNorEmpty(lastname)){
+            repositoryResult.get().setLastname(lastname);
         }
-        if(null != address && !address.isBlank()){
-            repositoryUser.get().setAddress(address);
+        if(AppUtils.isStringNeitherNullNorEmpty(address)){
+            repositoryResult.get().setAddress(address);
         }
-        if(null != password && !password.isBlank()){
-            repositoryUser.get().setPassword(password);
+        if(AppUtils.isStringNeitherNullNorEmpty(password)){
+            repositoryResult.get().setPassword(password);
         }
-        repository.save(repositoryUser.get());
-        return repositoryUser;
+        repository.save(repositoryResult.get());
+        return repositoryResult;
     }
 }

@@ -1,4 +1,4 @@
-package de.haevn.distributed_systems.v2.utils;
+package de.haevn.distributed_systems.v2.utils.sequence_generator;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

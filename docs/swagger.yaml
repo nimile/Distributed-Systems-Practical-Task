@@ -44,7 +44,7 @@ paths:
           content:
             application/json:
               schema: 
-                $ref: '#/components/schemas/UserList'
+                $ref: '#/components/schemas/User'
         '422':
           description: UNPROCESSABLE_ENTITY
           content:
@@ -76,7 +76,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserList'
+                $ref: '#/components/schemas/MessageContainer'
  
     delete:
       tags:
@@ -89,9 +89,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
-
-
-  /users/{id}: 
+  /users/{id}:
     get:
       tags:
         - "Users/{id}"
@@ -186,6 +184,82 @@ paths:
         '200':
           description: OK
 
+  /products:
+    get:
+      tags:
+        - "Products"
+      summary: Request a list of all products
+      description: This method returns a list of all existing products.<br>
+        If no product exists an empty list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+
+    post:
+      tags:
+        - "Products"
+      summary: Create a new product
+      description: "Requires a json object as request body.<br>
+        <ul>
+          Following codes can be yield
+          <li><b>OK:</b> Operation succeed</li>
+          <li><b>UNPROCESSABLE ENTITY</b>: The requestbody is missing</li>
+          <li><b>INTERNAL SERVER ERROR</b>: This status should never thrown</li>
+        </ul>"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postProduct'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+
+    put:
+      tags:
+        - "Products"
+      summary: Updates a list of products.
+      description: This method takes a list of product objects and updates them if they exists.<br>
+        It will return a json object containing how many products are updated
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
+
+    delete:
+      tags:
+        - "Products"
+      summary: Deletes all existing users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
 components:
   schemas:
     User:
@@ -219,12 +293,16 @@ components:
           format: int64
         brand:
           type: string
-        description: 
+          example: Generic brand
+        name:
           type: string
+          example: Generic product name
         newPrice: 
           type: number
+          example: 79.99
         oldPrice: 
           type: number
+          example: 89.99
     Review:
       type: object
       properties:
@@ -269,14 +347,26 @@ components:
         lastname:
           type: string
           example: Doe
-        address: 
+        address:
           type: string
           example: Zero Av. Generic Town
-        password: 
+        password:
           type: string
           example: ThisIsAnInsecurePassword
       required:
         - "email"
+    postProduct:
+      type: object
+      properties:
+        brand:
+          type: string
+          example: Generic brand name
+        name:
+          type: string
+          example: Generic product name
+        newPrice:
+          type: number
+          example: 79.99
 
     MessageContainer:
       type: object

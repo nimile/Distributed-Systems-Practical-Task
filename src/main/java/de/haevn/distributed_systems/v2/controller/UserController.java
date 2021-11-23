@@ -4,8 +4,8 @@ import de.haevn.distributed_systems.v2.exceptions.*;
 import de.haevn.distributed_systems.v2.model.User;
 import de.haevn.distributed_systems.v2.service.UserService;
 import de.haevn.distributed_systems.v2.utils.GenericResultContainer;
-import de.haevn.distributed_systems.v2.utils.NetworkUtils;
-import de.haevn.distributed_systems.v2.utils.SequenceGeneratorService;
+import de.haevn.distributed_systems.v2.utils.AppUtils;
+import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class UserController implements IController<User>{
             var result = service.findByEmail(obj.get().getEmail());
             // This check should always be true, but in some edge cases, e.g. DB shutdown, this can be false
             if (result.isPresent()) {
-                return NetworkUtils.generateResponse(HttpStatus.OK, result.get());
+                return AppUtils.generateResponse(HttpStatus.OK, result.get());
             }
         }
         logger.error("Provided object ({}) generated an internal server error.", obj);
@@ -73,7 +73,7 @@ public class UserController implements IController<User>{
         GenericResultContainer<Long> container = new GenericResultContainer<>();
         container.setMessage("Updated users");
         container.setData(updates);
-        return NetworkUtils.generateResponse(HttpStatus.OK, container);
+        return AppUtils.generateResponse(HttpStatus.OK, container);
     }
 
     @DeleteMapping
@@ -98,7 +98,7 @@ public class UserController implements IController<User>{
         if(result.isEmpty()){
             throw new NoObjectExistsException();
         }
-        return NetworkUtils.generateResponse(HttpStatus.OK, result.get());
+        return AppUtils.generateResponse(HttpStatus.OK, result.get());
     }
 
     @PutMapping("/{id}")
@@ -118,7 +118,7 @@ public class UserController implements IController<User>{
         if(result.isEmpty()){
             throw new APIException();
         }
-        return NetworkUtils.generateResponse(HttpStatus.OK, result.get());
+        return AppUtils.generateResponse(HttpStatus.OK, result.get());
     }
 
     @DeleteMapping("/{id}")

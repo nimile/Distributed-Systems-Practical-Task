@@ -1,4 +1,4 @@
-package de.haevn.distributed_systems.v2.utils;
+package de.haevn.distributed_systems.v2.utils.sequence_generator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,4 +16,7 @@ public interface IService<T> {
     void delete(Long id);
     void delete(T obj);
     void delete();
+
+
+    Optional<T> updateInternal(T input);
 }
