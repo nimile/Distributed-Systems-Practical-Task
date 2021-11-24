@@ -568,7 +568,7 @@ paths:
         - "Questions"
       summary: Updates a list of questions.
       description: This method takes a list of question objects and updates them if they exists.<br>
-        It will return a json object containing how many reviews are updated
+        It will return a json object containing how many questions are updated
       responses:
         '200':
           description: OK
@@ -587,7 +587,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageContainer'
-
 
   /questions/{id}:
     get:
@@ -653,7 +652,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: ID of the desired review
+          description: ID of the desired question
       responses:
         '200':
           description: OK
@@ -682,6 +681,171 @@ paths:
           description: OK
 
 
+  /orders:
+    get:
+      tags:
+        - "Orders"
+      summary: Request a list of all orders
+      description: This method returns a list of all existing orders.<br>
+        If no review exists an empty list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderList'
+    post:
+      tags:
+        - "Orders"
+      summary: Create a new order
+      description: "Requires a json object as request body.<br>
+        <ul>
+          Following codes can be yield
+          <li><b>OK:</b> Operation succeed</li>
+          <li><b>UNPROCESSABLE ENTITY</b>: The requestbody is missing</li>
+          <li><b>INTERNAL SERVER ERROR</b>: This status should never thrown</li>
+        </ul>"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postOrder'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    put:
+      tags:
+        - "Orders"
+      summary: Updates a list of orders.
+      description: This method takes a list of order objects and updates them if they exists.<br>
+        It will return a json object containing how many orders are updated
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
+    delete:
+      tags:
+        - "Orders"
+      summary: Deletes all existing orders
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContainer'
+
+  /orders/{id}:
+    get:
+      tags:
+        - "Orders/{id}"
+      summary: Request information about a order
+      description: "This method returns a details about an order.<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The order was successful returned</li>
+        <li><b>NOT FOUND:</b> There is no order associated with given id</li>
+        </ul>"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired order
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '404':
+          description: NOT_FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    post:
+      tags:
+        - "Orders/{id}"
+      summary: Not allowed
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired order
+      responses:
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    put:
+      tags:
+        - "Orders/{id}"
+      summary: Updates information about a order
+      description: "This method updates the order associated with given id<br>
+        <ul>Following codes can be yield
+        <li><b>OK:</b> The order was successful updated</li>
+        <li><b>CONFLICT: </b>The given id does not match the id specified by the body</li>
+       <li><b>UNPROCESSABLE_ENTITY: </b> The body is missing</li>
+        </ul>"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the desired order
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postOrder'
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+        '422':
+          description: UNPROCESSABLE_ENTITY
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+    delete:
+      tags:
+        - "Orders/{id}"
+      summary: Deletes the order specified by id
+      responses:
+        '200':
+          description: OK
 
 
 components:
