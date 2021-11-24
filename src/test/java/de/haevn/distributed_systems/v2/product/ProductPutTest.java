@@ -150,7 +150,6 @@ public class ProductPutTest extends AbstractPutTest<Product> {
         );
     }
 
-
     @Test
     @Override
     public void putById() {
