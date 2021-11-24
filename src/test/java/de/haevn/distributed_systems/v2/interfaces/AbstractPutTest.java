@@ -10,7 +10,9 @@ public abstract class AbstractPutTest<T>{
 
     public abstract void put();
     public abstract void putThrowsArgumentMismatchException();
-    public abstract void putApiException();
+    public abstract void putByIdApiException();
+    public abstract void putByIdConflictException();
+    public abstract void putByIdArgumentMismatchException();
     public abstract void putById();
 
 }

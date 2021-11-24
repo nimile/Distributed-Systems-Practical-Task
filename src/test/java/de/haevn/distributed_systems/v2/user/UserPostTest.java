@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = DistributedSystemsApplication.class)
 @AutoConfigureMockMvc
-public class UserPostTest extends AbstractPostTest<User> {
+class UserPostTest extends AbstractPostTest<User> {
     public static final Logger logger = LoggerFactory.getLogger(UserPostTest.class);
 
     @Autowired
@@ -97,37 +97,59 @@ public class UserPostTest extends AbstractPostTest<User> {
                 () -> controller.post(Optional.of(data.get(0))));
         System.out.println(result.getBody());
         Assertions.assertEquals(HttpStatus.OK, result.getStatusCode(),
-                "Custom message");
+                "Custom message"
+        );
     }
 
     @Test
     @Override
     public void postThrowsArgumentMismatchException() {
         logger.info("Execute test");
-        Optional<User> invalidUser = Optional.of(data.get(0));
-
+        Optional<User> emptyUser = Optional.empty();
         logger.info("Test empty object");
         Assertions.assertThrows(ArgumentMismatchException.class,
-                () -> controller.post(Optional.empty()),
+                () -> controller.post(emptyUser),
                 "Custom message");
+    }
 
-        logger.info("Test blank email address");
-        invalidUser.get().setEmail("");
-        Assertions.assertThrows(ArgumentMismatchException.class,
-                () -> controller.post(invalidUser),
-                "Custom message");
+    @Test
+    void postThrowsArgumentMismatchExceptionDueEmptyEmail() {
+        logger.info("Execute test");
+        Optional<User> invalidUser = Optional.of(data.get(0));
+        invalidUser.get().setEmail("  ");
 
         logger.info("Test empty email address");
-        invalidUser.get().setEmail("  ");
         Assertions.assertThrows(ArgumentMismatchException.class,
                 () -> controller.post(invalidUser),
-                "Custom message");
+                "Custom message"
+        );
+
+    }
+
+    @Test
+    void postThrowsArgumentMismatchExceptionDueBlankEmail() {
+        logger.info("Execute test");
+        Optional<User> invalidUser = Optional.of(data.get(0));
+        invalidUser.get().setEmail("");
+
+        logger.info("Test blank email address");
+        Assertions.assertThrows(ArgumentMismatchException.class,
+                () -> controller.post(invalidUser),
+                "Custom message"
+        );
+    }
+
+    @Test
+    void postThrowsArgumentMismatchExceptionDueNullEmail() {
+        logger.info("Execute test");
+        Optional<User> invalidUser = Optional.of(data.get(0));
+        invalidUser.get().setEmail(null);
 
         logger.info("Test null email address");
-        invalidUser.get().setEmail(null);
         Assertions.assertThrows(ArgumentMismatchException.class,
                 () -> controller.post(invalidUser),
-                "Custom message");
+                "Custom message"
+        );
     }
 
     @Test
@@ -139,7 +161,8 @@ public class UserPostTest extends AbstractPostTest<User> {
 
         Assertions.assertThrows(ExistenceException.class,
                 () -> controller.post(user),
-                "Custom message");
+                "Custom message"
+        );
     }
 
     @Test

@@ -2,11 +2,8 @@ package de.haevn.distributed_systems.v2.user;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
 import de.haevn.distributed_systems.v2.controller.UserController;
-import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
-import de.haevn.distributed_systems.v2.exceptions.ExistenceException;
-import de.haevn.distributed_systems.v2.exceptions.ForbiddenException;
+import de.haevn.distributed_systems.v2.exceptions.NoObjectExistsException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractGetTest;
-import de.haevn.distributed_systems.v2.interfaces.AbstractPostTest;
 import de.haevn.distributed_systems.v2.model.User;
 import de.haevn.distributed_systems.v2.repository.UserRepository;
 import de.haevn.distributed_systems.v2.service.UserService;
@@ -14,17 +11,13 @@ import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGenerato
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.mockito.Mockito.when;
 
@@ -75,18 +68,43 @@ public class UserGetTest extends AbstractGetTest<User> {
     }
 
 
+    @Test
     @Override
     public void get() {
+        initData();
+        when(service.findAll()).thenReturn(data);
 
+        logger.info("Execute test");
+        Assertions.assertDoesNotThrow(
+                () -> controller.get(),
+                "Custom Message"
+        );
     }
 
+    @Test
     @Override
     public void getById() {
+        initData();
+        when(service.findById(1L)).thenReturn(Optional.of(data.get(0)));
 
+        logger.info("Execute test");
+        Assertions.assertDoesNotThrow(
+                () -> controller.getById(1L),
+                "Custom Message"
+        );
     }
 
+    @Test
     @Override
     public void getByIdObjectDoesNotExists() {
+        initData();
+        when(service.findById(0L)).thenReturn(Optional.empty());
 
+        logger.info("Execute test");
+        Assertions.assertThrows(
+                NoObjectExistsException.class,
+                () -> controller.getById(0L),
+                "Custom Message"
+        );
     }
 }
