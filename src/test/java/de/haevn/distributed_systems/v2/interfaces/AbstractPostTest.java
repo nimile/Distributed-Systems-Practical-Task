@@ -7,6 +7,8 @@ import java.util.Optional;
 public abstract class AbstractPostTest<T>{
     protected List<T> data = new ArrayList<>();
     protected Optional<T> optionalObject;
+    protected Optional<T> emptyObject;
+    protected Optional<ArrayList<T>> emptyObjectList;
 
     public abstract void post();
     public abstract void postThrowsArgumentMismatchException();

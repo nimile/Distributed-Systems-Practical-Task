@@ -39,7 +39,7 @@ public class ProductController implements IController<Product> {
 
         // Tries to save the object, this operation fails when the user already exists
         if(service.save(obj.get())) {
-                return AppUtils.generateResponse(HttpStatus.OK, obj.get());
+            return AppUtils.generateResponse(HttpStatus.OK, obj.get());
         }
         logger.error("Provided object ({}) generated an internal server error.", obj);
         throw new APIException();

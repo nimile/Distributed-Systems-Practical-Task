@@ -1,11 +1,15 @@
-package de.haevn.distributed_systems.v2.user;
+package de.haevn.distributed_systems.v2.product;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
+import de.haevn.distributed_systems.v2.controller.ProductController;
 import de.haevn.distributed_systems.v2.controller.UserController;
 import de.haevn.distributed_systems.v2.exceptions.NoObjectExistsException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractGetTest;
+import de.haevn.distributed_systems.v2.model.Product;
 import de.haevn.distributed_systems.v2.model.User;
+import de.haevn.distributed_systems.v2.repository.ProductRepository;
 import de.haevn.distributed_systems.v2.repository.UserRepository;
+import de.haevn.distributed_systems.v2.service.ProductService;
 import de.haevn.distributed_systems.v2.service.UserService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
@@ -25,17 +29,17 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = DistributedSystemsApplication.class)
 @AutoConfigureMockMvc
-public class UserGetTest extends AbstractGetTest<User> {
-    public static final Logger logger = LoggerFactory.getLogger(UserGetTest.class);
+public class ProductGetTest extends AbstractGetTest<Product> {
+    public static final Logger logger = LoggerFactory.getLogger(ProductGetTest.class);
 
     @Autowired
-    public UserController controller;
+    public ProductController controller;
 
     @MockBean
-    public UserRepository repository;
+    public ProductRepository repository;
 
     @MockBean
-    public UserService service;
+    public ProductService service;
 
     @MockBean
     public SequenceGeneratorService sequenceGeneratorService;
@@ -45,11 +49,10 @@ public class UserGetTest extends AbstractGetTest<User> {
         logger.info("Setup data");
         // Setup data
 
-
         data.clear();
-        data.add(User.builder().firstname("Test1").lastname("User1").email("U1@test.domain").address("Street No.1").password("1234").id(1L).build());
-        data.add(User.builder().firstname("Test2").lastname("User2").email("U2@test.domain").address("Street No.2").password("1234").id(2L).build());
-        data.add(User.builder().firstname("Test3").lastname("User3").email("U3@test.domain").address("Street No.3").password("1234").id(3L).build());
+        data.add(Product.builder().name("Generic Keyboard").brand("Generic Brand").newPrice(169.99).oldPrice(169.99).id(0L).build());
+        data.add(Product.builder().name("Generic Mouse").brand("Generic Brand").newPrice(69.99).oldPrice(69.99).id(1L).build());
+        data.add(Product.builder().name("Deluxe Keyboard").brand("Deluxe Brand").newPrice(159.99).oldPrice(269.99).id(2L).build());
 
         optionalObject = Optional.of(data.get(0));
         emptyObject = Optional.empty();
@@ -59,9 +62,9 @@ public class UserGetTest extends AbstractGetTest<User> {
         when(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME)).thenReturn(1L);
 
         // Setup repository
-        when(repository.findByEmail(data.get(0).getEmail())).thenReturn(Optional.of(data.get(0)));
-        when(repository.findByEmail(data.get(1).getEmail())).thenReturn(Optional.of(data.get(1)));
-        when(repository.findByEmail(data.get(2).getEmail())).thenReturn(Optional.of(data.get(2)));
+        when(repository.findById(data.get(0).getId())).thenReturn(Optional.of(data.get(0)));
+        when(repository.findById(data.get(1).getId())).thenReturn(Optional.of(data.get(1)));
+        when(repository.findById(data.get(2).getId())).thenReturn(Optional.of(data.get(2)));
 
 
         when(repository.save(data.get(0))).thenReturn(data.get(0));
@@ -94,7 +97,7 @@ public class UserGetTest extends AbstractGetTest<User> {
     @Override
     public void getById() {
         initData();
-        when(service.findById(1L)).thenReturn(optionalObject);
+        when(service.findById(1L)).thenReturn(Optional.of(data.get(0)));
 
         logger.info("Execute test");
         var result = Assertions.assertDoesNotThrow(
