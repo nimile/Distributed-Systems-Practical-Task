@@ -1,8 +1,5 @@
 package de.haevn.distributed_systems.v2.interfaces;
 
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

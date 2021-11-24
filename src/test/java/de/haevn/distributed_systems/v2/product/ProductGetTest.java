@@ -2,15 +2,12 @@ package de.haevn.distributed_systems.v2.product;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
 import de.haevn.distributed_systems.v2.controller.ProductController;
-import de.haevn.distributed_systems.v2.controller.UserController;
 import de.haevn.distributed_systems.v2.exceptions.NoObjectExistsException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractGetTest;
 import de.haevn.distributed_systems.v2.model.Product;
 import de.haevn.distributed_systems.v2.model.User;
 import de.haevn.distributed_systems.v2.repository.ProductRepository;
-import de.haevn.distributed_systems.v2.repository.UserRepository;
 import de.haevn.distributed_systems.v2.service.ProductService;
-import de.haevn.distributed_systems.v2.service.UserService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

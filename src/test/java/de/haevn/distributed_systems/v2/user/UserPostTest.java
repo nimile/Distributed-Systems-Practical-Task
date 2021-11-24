@@ -4,7 +4,6 @@ import de.haevn.distributed_systems.DistributedSystemsApplication;
 import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.exceptions.ExistenceException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractPostTest;
-import de.haevn.distributed_systems.v2.interfaces.AbstractTest;
 import de.haevn.distributed_systems.v2.controller.UserController;
 import de.haevn.distributed_systems.v2.exceptions.ForbiddenException;
 import de.haevn.distributed_systems.v2.model.User;

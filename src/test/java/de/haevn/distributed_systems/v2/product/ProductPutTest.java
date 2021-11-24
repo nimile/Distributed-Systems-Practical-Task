@@ -2,7 +2,6 @@ package de.haevn.distributed_systems.v2.product;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
 import de.haevn.distributed_systems.v2.controller.ProductController;
-import de.haevn.distributed_systems.v2.controller.UserController;
 import de.haevn.distributed_systems.v2.exceptions.APIException;
 import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.exceptions.ConflictException;
@@ -10,9 +9,7 @@ import de.haevn.distributed_systems.v2.interfaces.AbstractPutTest;
 import de.haevn.distributed_systems.v2.model.Product;
 import de.haevn.distributed_systems.v2.model.User;
 import de.haevn.distributed_systems.v2.repository.ProductRepository;
-import de.haevn.distributed_systems.v2.repository.UserRepository;
 import de.haevn.distributed_systems.v2.service.ProductService;
-import de.haevn.distributed_systems.v2.service.UserService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
