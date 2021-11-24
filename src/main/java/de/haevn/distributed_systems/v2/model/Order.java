@@ -6,9 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Builder
 @Data
 @Document(collection = "orders")
@@ -21,13 +18,4 @@ public class Order {
     private String date;
     private String payment;
     private Double total;
-
-    private User user;
-    private List<Product> products;
-
-    public static class OrderInput{
-        long userId = 0;
-        List<Long> products = new ArrayList<>();
-        String payment = "";
-    }
 }
