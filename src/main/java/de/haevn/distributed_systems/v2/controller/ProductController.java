@@ -80,7 +80,7 @@ public class ProductController implements IController<Product> {
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<Product> getById(long id) {
+    public ResponseEntity<Product> getById(@PathVariable long id) {
         var result = service.findById(id);
         if(result.isEmpty()){
             throw new NoObjectExistsException();
@@ -90,7 +90,7 @@ public class ProductController implements IController<Product> {
 
     @PutMapping("/{id}")
     @Override
-    public ResponseEntity<Product> putById(long id, Optional<Product> obj) throws APIException {
+    public ResponseEntity<Product> putById(@PathVariable long id, Optional<Product> obj) throws APIException {
         if(obj.isEmpty()){
             throw new ArgumentMismatchException();
         }else if(obj.get().getId() == null || obj.get().getId() != id){
@@ -107,7 +107,7 @@ public class ProductController implements IController<Product> {
 
     @DeleteMapping("/{id}")
     @Override
-    public void deleteById(long id) {
+    public void deleteById(@PathVariable long id) {
         service.delete(id);
     }
 }

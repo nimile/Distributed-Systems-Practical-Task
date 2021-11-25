@@ -2,16 +2,12 @@ package de.haevn.distributed_systems.v2.orders;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
 import de.haevn.distributed_systems.v2.controller.OrderController;
-import de.haevn.distributed_systems.v2.controller.ReviewController;
 import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.exceptions.ForbiddenException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractPostTest;
 import de.haevn.distributed_systems.v2.model.Order;
-import de.haevn.distributed_systems.v2.model.Review;
 import de.haevn.distributed_systems.v2.repository.OrderRepository;
-import de.haevn.distributed_systems.v2.repository.ReviewRepository;
 import de.haevn.distributed_systems.v2.service.OrderService;
-import de.haevn.distributed_systems.v2.service.ReviewService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

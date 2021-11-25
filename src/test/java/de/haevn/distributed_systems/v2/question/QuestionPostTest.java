@@ -2,7 +2,6 @@ package de.haevn.distributed_systems.v2.question;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
 import de.haevn.distributed_systems.v2.controller.QuestionController;
-import de.haevn.distributed_systems.v2.controller.ReviewController;
 import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.exceptions.ForbiddenException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractPostTest;
@@ -10,9 +9,7 @@ import de.haevn.distributed_systems.v2.model.Question;
 import de.haevn.distributed_systems.v2.model.Review;
 import de.haevn.distributed_systems.v2.model.User;
 import de.haevn.distributed_systems.v2.repository.QuestionRepository;
-import de.haevn.distributed_systems.v2.repository.ReviewRepository;
 import de.haevn.distributed_systems.v2.service.QuestionService;
-import de.haevn.distributed_systems.v2.service.ReviewService;
 import de.haevn.distributed_systems.v2.service.UserService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
@@ -59,7 +56,7 @@ class QuestionPostTest extends AbstractPostTest<Question> {
         Optional<User> testUser = Optional.of(User.builder().firstname("Test1").lastname("User1").email("U1@test.domain").address("Street No.1").password("1234").id(1L).build());
         when(userService.findByEmail("U1@test.domain")).thenReturn(testUser);
 
-        data.add(Question.builder().id(1L).firstname("Test1").lastname("User1").email("U1@test.domain").category("Retoure").description("Description").build());
+        data.add(Question.builder().id(1L).firstname("Test1").lastname("User1").email("U1@test.domain").category("Return").description("Description").build());
         data.add(Question.builder().id(2L).firstname("Test2").lastname("User2").email("U2@test.domain").category("Feedback").description("Description").build());
         data.add(Question.builder().id(3L).firstname("Test3").lastname("User3").email("U3@test.domain").category("Help").description("Description").build());
 

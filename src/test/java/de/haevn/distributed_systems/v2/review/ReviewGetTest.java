@@ -1,16 +1,11 @@
 package de.haevn.distributed_systems.v2.review;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
-import de.haevn.distributed_systems.v2.controller.ProductController;
 import de.haevn.distributed_systems.v2.controller.ReviewController;
 import de.haevn.distributed_systems.v2.exceptions.NoObjectExistsException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractGetTest;
-import de.haevn.distributed_systems.v2.model.Product;
 import de.haevn.distributed_systems.v2.model.Review;
-import de.haevn.distributed_systems.v2.model.User;
-import de.haevn.distributed_systems.v2.repository.ProductRepository;
 import de.haevn.distributed_systems.v2.repository.ReviewRepository;
-import de.haevn.distributed_systems.v2.service.ProductService;
 import de.haevn.distributed_systems.v2.service.ReviewService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;

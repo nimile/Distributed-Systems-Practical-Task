@@ -87,7 +87,7 @@ class UserPostTest extends AbstractPostTest<User> {
             }
         });
         when(service.save(data.get(0))).thenAnswer(
-                (Answer) invocation -> {
+                (Answer<Boolean>) invocation -> {
                     saved.set(true);
                     return true;
                 }
