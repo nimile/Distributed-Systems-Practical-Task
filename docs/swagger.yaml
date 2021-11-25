@@ -533,6 +533,7 @@ paths:
         - "Questions"
       summary: Create a new question
       description: "Requires a json object as request body.<br>
+        If a user exists the customer-id is replaced with the corresponding user id
         <ul>
           Following codes can be yield
           <li><b>OK:</b> Operation succeed</li>
