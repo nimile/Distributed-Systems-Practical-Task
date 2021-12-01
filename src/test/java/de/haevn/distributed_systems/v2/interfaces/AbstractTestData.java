@@ -9,4 +9,5 @@ public abstract class AbstractTestData<T>{
     protected Optional<T> optionalObject;
     protected Optional<T> emptyObject;
     protected Optional<ArrayList<T>> emptyObjectList;
+    protected Optional<ArrayList<T>> optionalList;
 }
