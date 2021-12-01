@@ -4,7 +4,6 @@ import de.haevn.distributed_systems.DistributedSystemsApplication;
 import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.exceptions.ExistenceException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractPostTest;
-import de.haevn.distributed_systems.v2.interfaces.AbstractTest;
 import de.haevn.distributed_systems.v2.controller.UserController;
 import de.haevn.distributed_systems.v2.exceptions.ForbiddenException;
 import de.haevn.distributed_systems.v2.model.User;
@@ -55,6 +54,8 @@ class UserPostTest extends AbstractPostTest<User> {
         data.add(User.builder().firstname("Test3").lastname("User3").email("U3@test.domain").address("Street No.3").password("1234").id(3L).build());
 
         optionalObject = Optional.of(data.get(0));
+        emptyObject = Optional.empty();
+        emptyObjectList = Optional.empty();
 
         logger.info("Setup repositories");
         when(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME)).thenReturn(1L);
@@ -77,16 +78,16 @@ class UserPostTest extends AbstractPostTest<User> {
     public void post() {
         AtomicBoolean saved = new AtomicBoolean(false);
         logger.info("Setup service");
-        when(service.findByEmail(data.get(0).getEmail())).thenReturn(Optional.of(data.get(0)));
+        when(service.findByEmail(data.get(0).getEmail())).thenReturn(optionalObject);
         when(service.findByEmail(data.get(0).getEmail())).thenAnswer((Answer<?>) invocation ->{
             if(saved.get()){
-                return Optional.of(data.get(0));
+                return optionalObject;
             }else{
-                return Optional.empty();
+                return emptyObject;
             }
         });
         when(service.save(data.get(0))).thenAnswer(
-                (Answer) invocation -> {
+                (Answer<Boolean>) invocation -> {
                     saved.set(true);
                     return true;
                 }
@@ -94,9 +95,12 @@ class UserPostTest extends AbstractPostTest<User> {
 
         logger.info("Execute test");
         var result= Assertions.assertDoesNotThrow(
-                () -> controller.post(Optional.of(data.get(0))));
-        System.out.println(result.getBody());
-        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode(),
+                () -> controller.post(optionalObject),
+                "Custom Message"
+        ).getStatusCode();
+
+        Assertions.assertEquals(
+                HttpStatus.OK, result,
                 "Custom message"
         );
     }
@@ -105,10 +109,9 @@ class UserPostTest extends AbstractPostTest<User> {
     @Override
     public void postThrowsArgumentMismatchException() {
         logger.info("Execute test");
-        Optional<User> emptyUser = Optional.empty();
         logger.info("Test empty object");
         Assertions.assertThrows(ArgumentMismatchException.class,
-                () -> controller.post(emptyUser),
+                () -> controller.post(emptyObject),
                 "Custom message");
     }
 
@@ -157,8 +160,8 @@ class UserPostTest extends AbstractPostTest<User> {
     public void postExistsException() {
         when(service.findByEmail(data.get(0).getEmail())).thenReturn(Optional.of(data.get(0)));
         var user = Optional.of(data.get(0));
-        logger.info("Execute test");
 
+        logger.info("Execute test");
         Assertions.assertThrows(ExistenceException.class,
                 () -> controller.post(user),
                 "Custom message"
@@ -172,7 +175,8 @@ class UserPostTest extends AbstractPostTest<User> {
         logger.info("Execute test");
         Assertions.assertThrows(ForbiddenException.class,
                 () -> controller.postById(0L),
-                "Custom message");
+                "Custom message"
+        );
     }
 
 }

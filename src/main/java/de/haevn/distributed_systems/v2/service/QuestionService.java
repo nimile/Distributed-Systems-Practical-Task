@@ -4,13 +4,18 @@ import de.haevn.distributed_systems.v2.model.Question;
 import de.haevn.distributed_systems.v2.repository.QuestionRepository;
 import de.haevn.distributed_systems.v2.service.interfaces.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class QuestionService implements IQuestionService {
     @Autowired
     private QuestionRepository repository;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * {@inheritDoc}
@@ -34,6 +39,8 @@ public class QuestionService implements IQuestionService {
      */
     @Override
     public boolean save(Question obj) {
+        var user = userService.findByEmail(obj.getEmail());
+        user.ifPresent(value -> obj.setCustomerId(value.getId()));
         repository.save(obj);
         return true;
     }
@@ -43,7 +50,7 @@ public class QuestionService implements IQuestionService {
      */
     @Override
     public void save(List<Question> objs) {
-        repository.saveAll(objs);
+        objs.forEach(this::save);
     }
 
     /**

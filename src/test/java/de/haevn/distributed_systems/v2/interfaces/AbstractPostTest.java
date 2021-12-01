@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractPostTest<T>{
-    protected List<T> data = new ArrayList<>();
-    protected Optional<T> optionalObject;
+public abstract class AbstractPostTest<T> extends AbstractTestData<T>{
 
     public abstract void post();
     public abstract void postThrowsArgumentMismatchException();

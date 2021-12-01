@@ -1,12 +1,12 @@
-package de.haevn.distributed_systems.v2.user;
+package de.haevn.distributed_systems.v2.review;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
-import de.haevn.distributed_systems.v2.controller.UserController;
+import de.haevn.distributed_systems.v2.controller.ReviewController;
 import de.haevn.distributed_systems.v2.exceptions.NoObjectExistsException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractGetTest;
-import de.haevn.distributed_systems.v2.model.User;
-import de.haevn.distributed_systems.v2.repository.UserRepository;
-import de.haevn.distributed_systems.v2.service.UserService;
+import de.haevn.distributed_systems.v2.model.Review;
+import de.haevn.distributed_systems.v2.repository.ReviewRepository;
+import de.haevn.distributed_systems.v2.service.ReviewService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,17 +25,17 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = DistributedSystemsApplication.class)
 @AutoConfigureMockMvc
-public class UserGetTest extends AbstractGetTest<User> {
-    public static final Logger logger = LoggerFactory.getLogger(UserGetTest.class);
+public class ReviewGetTest extends AbstractGetTest<Review> {
+    public static final Logger logger = LoggerFactory.getLogger(ReviewGetTest.class);
 
     @Autowired
-    public UserController controller;
+    public ReviewController controller;
 
     @MockBean
-    public UserRepository repository;
+    public ReviewRepository repository;
 
     @MockBean
-    public UserService service;
+    public ReviewService service;
 
     @MockBean
     public SequenceGeneratorService sequenceGeneratorService;
@@ -45,23 +45,21 @@ public class UserGetTest extends AbstractGetTest<User> {
         logger.info("Setup data");
         // Setup data
 
-
         data.clear();
-        data.add(User.builder().firstname("Test1").lastname("User1").email("U1@test.domain").address("Street No.1").password("1234").id(1L).build());
-        data.add(User.builder().firstname("Test2").lastname("User2").email("U2@test.domain").address("Street No.2").password("1234").id(2L).build());
-        data.add(User.builder().firstname("Test3").lastname("User3").email("U3@test.domain").address("Street No.3").password("1234").id(3L).build());
-
+        data.add(Review.builder().id(0L).publisher("User 1").starRating(5L).text("Example Review").build());
+        data.add(Review.builder().id(1L).publisher("User 2").starRating(4L).text("Example Review").build());
+        data.add(Review.builder().id(2L).publisher("User 3").starRating(3L).text("Example Review").build());
         optionalObject = Optional.of(data.get(0));
         emptyObject = Optional.empty();
         emptyObjectList = Optional.empty();
 
         logger.info("Setup repositories");
-        when(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME)).thenReturn(1L);
+        when(sequenceGeneratorService.generateSequence(Review.SEQUENCE_NAME)).thenReturn(1L);
 
         // Setup repository
-        when(repository.findByEmail(data.get(0).getEmail())).thenReturn(Optional.of(data.get(0)));
-        when(repository.findByEmail(data.get(1).getEmail())).thenReturn(Optional.of(data.get(1)));
-        when(repository.findByEmail(data.get(2).getEmail())).thenReturn(Optional.of(data.get(2)));
+        when(repository.findById(data.get(0).getId())).thenReturn(Optional.of(data.get(0)));
+        when(repository.findById(data.get(1).getId())).thenReturn(Optional.of(data.get(1)));
+        when(repository.findById(data.get(2).getId())).thenReturn(Optional.of(data.get(2)));
 
 
         when(repository.save(data.get(0))).thenReturn(data.get(0));
@@ -94,7 +92,7 @@ public class UserGetTest extends AbstractGetTest<User> {
     @Override
     public void getById() {
         initData();
-        when(service.findById(1L)).thenReturn(optionalObject);
+        when(service.findById(1L)).thenReturn(Optional.of(data.get(0)));
 
         logger.info("Execute test");
         var result = Assertions.assertDoesNotThrow(

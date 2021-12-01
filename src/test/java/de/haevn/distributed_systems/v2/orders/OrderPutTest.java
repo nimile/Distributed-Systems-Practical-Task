@@ -1,14 +1,14 @@
-package de.haevn.distributed_systems.v2.user;
+package de.haevn.distributed_systems.v2.orders;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
-import de.haevn.distributed_systems.v2.controller.UserController;
+import de.haevn.distributed_systems.v2.controller.OrderController;
 import de.haevn.distributed_systems.v2.exceptions.APIException;
 import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.exceptions.ConflictException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractPutTest;
-import de.haevn.distributed_systems.v2.model.User;
-import de.haevn.distributed_systems.v2.repository.UserRepository;
-import de.haevn.distributed_systems.v2.service.UserService;
+import de.haevn.distributed_systems.v2.model.Order;
+import de.haevn.distributed_systems.v2.repository.OrderRepository;
+import de.haevn.distributed_systems.v2.service.OrderService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,41 +28,42 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = DistributedSystemsApplication.class)
 @AutoConfigureMockMvc
-public class UserPutTest extends AbstractPutTest<User> {
-    public static final Logger logger = LoggerFactory.getLogger(UserPutTest.class);
+public class OrderPutTest extends AbstractPutTest<Order> {
+    public static final Logger logger = LoggerFactory.getLogger(OrderPutTest.class);
 
     @Autowired
-    public UserController controller;
+    public OrderController controller;
 
     @MockBean
-    public UserRepository repository;
+    public OrderRepository repository;
 
     @MockBean
-    public UserService service;
+    public OrderService service;
 
     @MockBean
     public SequenceGeneratorService sequenceGeneratorService;
 
     @BeforeEach
     void initData(){
-        logger.info("Setup data");
         // Setup data
+
         data.clear();
-        data.add(User.builder().firstname("Test1").lastname("User1").email("U1@test.domain").address("Street No.1").password("1234").id(1L).build());
-        data.add(User.builder().firstname("Test2").lastname("User2").email("U2@test.domain").address("Street No.2").password("1234").id(2L).build());
-        data.add(User.builder().firstname("Test3").lastname("User3").email("U3@test.domain").address("Street No.3").password("1234").id(3L).build());
+        data.add(Order.builder().id(1L).date("01-01-2021").payment("Paypal").total(100.99).build());
+        data.add(Order.builder().id(2L).date("01-01-2021").payment("Credit").total(249.99).build());
+        data.add(Order.builder().id(3L).date("01-01-2021").payment("Cash").total(69.99).build());
 
         optionalObject = Optional.of(data.get(0));
         emptyObject = Optional.empty();
         emptyObjectList = Optional.empty();
         optionalList = Optional.of(new ArrayList<>(data));
+
         logger.info("Setup repositories");
-        when(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME)).thenReturn(1L);
+        when(sequenceGeneratorService.generateSequence(Order.SEQUENCE_NAME)).thenReturn(1L);
 
         // Setup repository
-        when(repository.findByEmail(data.get(0).getEmail())).thenReturn(Optional.of(data.get(0)));
-        when(repository.findByEmail(data.get(1).getEmail())).thenReturn(Optional.of(data.get(1)));
-        when(repository.findByEmail(data.get(2).getEmail())).thenReturn(Optional.of(data.get(2)));
+        when(repository.findById(data.get(0).getId())).thenReturn(Optional.of(data.get(0)));
+        when(repository.findById(data.get(1).getId())).thenReturn(Optional.of(data.get(1)));
+        when(repository.findById(data.get(2).getId())).thenReturn(Optional.of(data.get(2)));
 
 
         when(repository.save(data.get(0))).thenReturn(data.get(0));
@@ -75,7 +76,6 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void put() {
-        initData();
         when(service.update(data)).thenReturn(3L);
 
         logger.info("Execute test");
@@ -93,8 +93,6 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putThrowsArgumentMismatchException() {
-        initData();
-
         logger.info("Execute test");
         Assertions.assertThrows(ArgumentMismatchException.class,
                 () -> controller.put(emptyObjectList),
@@ -108,8 +106,6 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putByIdArgumentMismatchException(){
-        initData();
-
         logger.info("Execute test");
         Assertions.assertThrows(ArgumentMismatchException.class,
                 () -> controller.putById(1, emptyObject),
@@ -120,12 +116,11 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putByIdConflictException(){
-        initData();
         logger.info("Execute test");
-        Optional<User> user = Optional.of(data.get(0));
-        long id = user.get().getId() + 1;
+        Optional<Order> order = Optional.of(data.get(0));
+        long id = order.get().getId() + 1;
         Assertions.assertThrows(ConflictException.class,
-                () -> controller.putById(id, user),
+                () -> controller.putById(id, order),
                 "Custom message"
         );
     }
@@ -133,29 +128,27 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putByIdApiException(){
-        Optional<User> user = Optional.of(data.get(0));
-        long id = user.get().getId();
-        when(service.update(user.get())).thenReturn(emptyObject);
+        Optional<Order> order = Optional.of(data.get(0));
+        long id = order.get().getId();
+        when(service.update(order.get())).thenReturn(emptyObject);
 
         logger.info("Execute test");
         Assertions.assertThrows(
                 APIException.class,
-                () -> controller.putById(id, user),
+                () -> controller.putById(id, order),
                 "Custom message"
         );
     }
 
-
     @Test
     @Override
     public void putById() {
-        initData();
-        Optional<User> user = Optional.of(data.get(0));
-        when(service.update(user.get())).thenReturn(user);
+        Optional<Order> order = Optional.of(data.get(0));
+        when(service.update(order.get())).thenReturn(order);
 
         logger.info("Execute test");
         var result = Assertions.assertDoesNotThrow(
-                () -> controller.putById(user.get().getId(), user),
+                () -> controller.putById(order.get().getId(), order),
                 "Custom Message"
         ).getStatusCode();
 

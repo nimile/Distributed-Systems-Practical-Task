@@ -1,13 +1,16 @@
-package de.haevn.distributed_systems.v2.user;
+package de.haevn.distributed_systems.v2.question;
 
 import de.haevn.distributed_systems.DistributedSystemsApplication;
-import de.haevn.distributed_systems.v2.controller.UserController;
+import de.haevn.distributed_systems.v2.controller.QuestionController;
 import de.haevn.distributed_systems.v2.exceptions.APIException;
 import de.haevn.distributed_systems.v2.exceptions.ArgumentMismatchException;
 import de.haevn.distributed_systems.v2.exceptions.ConflictException;
 import de.haevn.distributed_systems.v2.interfaces.AbstractPutTest;
+import de.haevn.distributed_systems.v2.model.Question;
+import de.haevn.distributed_systems.v2.model.Review;
 import de.haevn.distributed_systems.v2.model.User;
-import de.haevn.distributed_systems.v2.repository.UserRepository;
+import de.haevn.distributed_systems.v2.repository.QuestionRepository;
+import de.haevn.distributed_systems.v2.service.QuestionService;
 import de.haevn.distributed_systems.v2.service.UserService;
 import de.haevn.distributed_systems.v2.utils.sequence_generator.SequenceGeneratorService;
 import org.junit.jupiter.api.Assertions;
@@ -28,41 +31,48 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = DistributedSystemsApplication.class)
 @AutoConfigureMockMvc
-public class UserPutTest extends AbstractPutTest<User> {
-    public static final Logger logger = LoggerFactory.getLogger(UserPutTest.class);
+public class QuestionPutTest extends AbstractPutTest<Question> {
+    public static final Logger logger = LoggerFactory.getLogger(QuestionPutTest.class);
 
     @Autowired
-    public UserController controller;
+    public QuestionController controller;
 
     @MockBean
-    public UserRepository repository;
+    public QuestionRepository repository;
 
     @MockBean
-    public UserService service;
+    public QuestionService service;
+
+    @MockBean
+    public UserService userService;
 
     @MockBean
     public SequenceGeneratorService sequenceGeneratorService;
 
     @BeforeEach
     void initData(){
-        logger.info("Setup data");
         // Setup data
+
         data.clear();
-        data.add(User.builder().firstname("Test1").lastname("User1").email("U1@test.domain").address("Street No.1").password("1234").id(1L).build());
-        data.add(User.builder().firstname("Test2").lastname("User2").email("U2@test.domain").address("Street No.2").password("1234").id(2L).build());
-        data.add(User.builder().firstname("Test3").lastname("User3").email("U3@test.domain").address("Street No.3").password("1234").id(3L).build());
+        Optional<User> testUser = Optional.of(User.builder().firstname("Test1").lastname("User1").email("U1@test.domain").address("Street No.1").password("1234").id(1L).build());
+        when(userService.findByEmail("U1@test.domain")).thenReturn(testUser);
+
+        data.add(Question.builder().id(1L).firstname("Test1").lastname("User1").email("U1@test.domain").category("Return").description("Description").build());
+        data.add(Question.builder().id(2L).firstname("Test2").lastname("User2").email("U2@test.domain").category("Feedback").description("Description").build());
+        data.add(Question.builder().id(3L).firstname("Test3").lastname("User3").email("U3@test.domain").category("Help").description("Description").build());
 
         optionalObject = Optional.of(data.get(0));
         emptyObject = Optional.empty();
         emptyObjectList = Optional.empty();
         optionalList = Optional.of(new ArrayList<>(data));
+
         logger.info("Setup repositories");
-        when(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME)).thenReturn(1L);
+        when(sequenceGeneratorService.generateSequence(Review.SEQUENCE_NAME)).thenReturn(1L);
 
         // Setup repository
-        when(repository.findByEmail(data.get(0).getEmail())).thenReturn(Optional.of(data.get(0)));
-        when(repository.findByEmail(data.get(1).getEmail())).thenReturn(Optional.of(data.get(1)));
-        when(repository.findByEmail(data.get(2).getEmail())).thenReturn(Optional.of(data.get(2)));
+        when(repository.findById(data.get(0).getId())).thenReturn(Optional.of(data.get(0)));
+        when(repository.findById(data.get(1).getId())).thenReturn(Optional.of(data.get(1)));
+        when(repository.findById(data.get(2).getId())).thenReturn(Optional.of(data.get(2)));
 
 
         when(repository.save(data.get(0))).thenReturn(data.get(0));
@@ -75,7 +85,6 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void put() {
-        initData();
         when(service.update(data)).thenReturn(3L);
 
         logger.info("Execute test");
@@ -93,8 +102,6 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putThrowsArgumentMismatchException() {
-        initData();
-
         logger.info("Execute test");
         Assertions.assertThrows(ArgumentMismatchException.class,
                 () -> controller.put(emptyObjectList),
@@ -108,8 +115,6 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putByIdArgumentMismatchException(){
-        initData();
-
         logger.info("Execute test");
         Assertions.assertThrows(ArgumentMismatchException.class,
                 () -> controller.putById(1, emptyObject),
@@ -120,12 +125,11 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putByIdConflictException(){
-        initData();
         logger.info("Execute test");
-        Optional<User> user = Optional.of(data.get(0));
-        long id = user.get().getId() + 1;
+        Optional<Question> question = Optional.of(data.get(0));
+        long id = question.get().getId() + 1;
         Assertions.assertThrows(ConflictException.class,
-                () -> controller.putById(id, user),
+                () -> controller.putById(id, question),
                 "Custom message"
         );
     }
@@ -133,29 +137,27 @@ public class UserPutTest extends AbstractPutTest<User> {
     @Test
     @Override
     public void putByIdApiException(){
-        Optional<User> user = Optional.of(data.get(0));
-        long id = user.get().getId();
-        when(service.update(user.get())).thenReturn(emptyObject);
+        Optional<Question> question = Optional.of(data.get(0));
+        long id = question.get().getId();
+        when(service.update(question.get())).thenReturn(emptyObject);
 
         logger.info("Execute test");
         Assertions.assertThrows(
                 APIException.class,
-                () -> controller.putById(id, user),
+                () -> controller.putById(id, question),
                 "Custom message"
         );
     }
 
-
     @Test
     @Override
     public void putById() {
-        initData();
-        Optional<User> user = Optional.of(data.get(0));
-        when(service.update(user.get())).thenReturn(user);
+        Optional<Question> question = Optional.of(data.get(0));
+        when(service.update(question.get())).thenReturn(question);
 
         logger.info("Execute test");
         var result = Assertions.assertDoesNotThrow(
-                () -> controller.putById(user.get().getId(), user),
+                () -> controller.putById(question.get().getId(), question),
                 "Custom Message"
         ).getStatusCode();
 
